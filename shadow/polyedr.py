@@ -173,13 +173,10 @@ class Polyedr:
                             v2 = vertexes[-2] * (1 / c)
                             ab, ac = v1 - v0, v2 - v0
                             area += (ab.cross(ac)).length()
-                            print(area)
                     if (self.nice_point(Facet(vertexes).center(
                         ).rz(-gamma).ry(-beta).rz(-alpha) * (1 / c)) and
                             count > 0):
                         self.area += area
-                        print(self.area, 111)
-
                     # задание рёбер грани
                     for n in range(size):
                         self.edges.append(Edge(vertexes[n - 1], vertexes[n]))
