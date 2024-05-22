@@ -122,11 +122,19 @@ class Polyedr:
     # вектор проектирования
     V = R3(0.0, 0.0, 1.0)
 
+    @staticmethod
+    def nice_point(a):
+        if 1 < a.x ** 2 + a.y ** 2 + a.z ** 2 < 4:
+            return True
+        else:
+            return False
+
     # Параметры конструктора: файл, задающий полиэдр
     def __init__(self, file):
 
         # списки вершин, рёбер и граней полиэдра
         self.vertexes, self.edges, self.facets = [], [], []
+        self.area = 0
 
         # список строк файла
         with open(file) as f:
@@ -152,7 +160,26 @@ class Polyedr:
                     # количество вершин очередной грани
                     size = int(buf.pop(0))
                     # массив вершин этой грани
-                    vertexes = list(self.vertexes[int(n) - 1] for n in buf)
+                    area = 0
+                    count = 0
+                    vertexes = list()
+                    for i, n in enumerate(buf):
+                        vertexes.append(self.vertexes[int(n) - 1])
+                        if vertexes[-1].is_nice:
+                            count += 1
+                        if 1 < i:
+                            v0 = vertexes[0] * (1 / c)
+                            v1 = vertexes[-1] * (1 / c)
+                            v2 = vertexes[-2] * (1 / c)
+                            ab, ac = v1 - v0, v2 - v0
+                            area += (ab.cross(ac)).length()
+                            print(area)
+                    if (self.nice_point(Facet(vertexes).center(
+                        ).rz(-gamma).ry(-beta).rz(-alpha) * (1 / c)) and
+                            count > 0):
+                        self.area += area
+                        print(self.area, 111)
+
                     # задание рёбер грани
                     for n in range(size):
                         self.edges.append(Edge(vertexes[n - 1], vertexes[n]))

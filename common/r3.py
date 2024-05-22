@@ -1,12 +1,16 @@
-from math import sin, cos
+from math import sin, cos, sqrt
 
 
 class R3:
     """ Вектор (точка) в R3 """
 
     # Конструктор
-    def __init__(self, x, y, z):
+    def __init__(self, x, y, z, is_nice=None):
         self.x, self.y, self.z = x, y, z
+        if is_nice is None:
+            self.is_nice = 1 < self.x ** 2 + self.y ** 2 + self.z ** 2 < 4
+        else:
+            self.is_nice = is_nice
 
     # Сумма векторов
     def __add__(self, other):
@@ -18,18 +22,18 @@ class R3:
 
     # Умножение на число
     def __mul__(self, k):
-        return R3(k * self.x, k * self.y, k * self.z)
+        return R3(k * self.x, k * self.y, k * self.z, self.is_nice)
 
     # Поворот вокруг оси Oz
     def rz(self, fi):
         return R3(
             cos(fi) * self.x - sin(fi) * self.y,
-            sin(fi) * self.x + cos(fi) * self.y, self.z)
+            sin(fi) * self.x + cos(fi) * self.y, self.z, self.is_nice)
 
     # Поворот вокруг оси Oy
     def ry(self, fi):
         return R3(cos(fi) * self.x + sin(fi) * self.z,
-                  self.y, -sin(fi) * self.x + cos(fi) * self.z)
+                  self.y, -sin(fi) * self.x + cos(fi) * self.z, self.is_nice)
 
     # Скалярное произведение
     def dot(self, other):
@@ -42,6 +46,8 @@ class R3:
             self.z * other.x - self.x * other.z,
             self.x * other.y - self.y * other.x)
 
+    def length(self):
+        return sqrt(self.x ** 2 + self.y ** 2 + self.z ** 2) / 2
 
 if __name__ == "__main__":  # pragma: no cover
     x = R3(1.0, 1.0, 1.0)
