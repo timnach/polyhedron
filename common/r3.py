@@ -49,6 +49,7 @@ class R3:
     def length(self):
         return sqrt(self.x ** 2 + self.y ** 2 + self.z ** 2) / 2
 
+
 if __name__ == "__main__":  # pragma: no cover
     x = R3(1.0, 1.0, 1.0)
     print("x", type(x), x.__dict__)
